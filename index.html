@@ -195,7 +195,7 @@
     <p>Hay mil formas de pedirte que seas mi San Valentín, pero esta vez quería hacerlo desde mi lado un poquito hacker y muy cursi 🧸❤️</p>
     <h2>¿Quieres ser mi San Valentín? 🌷</h2>
     <div class="buttons">
-        <button class="no" id="btnNo" onmouseover="moveNo()" onclick="moveNo()">No 😢</button>
+        <button class="no" id="btnNo" onmouseover="moveNo(event)" onclick="moveNo(event)" ontouchstart="moveNo(event)">No 😢</button>
         <button class="yes" id="btnYes" onclick="handleYes()">Sí 💕</button>
     </div>
 </div>
@@ -222,14 +222,12 @@
 </div>
 
 <script>
-    // 1. Configuración de Canciones
     const playlist = [
         { title: "Love Story (Taylor's Version)", file: "music.mp3", cover: "images/fotorep.jpg" },
         { title: "Te Quiero Tanto, Tanto (En Vivo)", file: "music2.mp3", cover: "images/fotorep2.jpg" }
     ];
     let currentTrackIndex = 0;
 
-    // 2. Emojis iniciales
     function createEmoji() {
         const emojis = ['❤️', '🌹', '🐒', '💖'];
         const particle = document.createElement('div');
@@ -244,7 +242,6 @@
     setInterval(createEmoji, 600);
     for(let i=0; i<5; i++) createEmoji();
 
-    // 3. Lógica de Navegación
     let yesSize = 16;
     const btnNo = document.getElementById("btnNo");
     const btnYes = document.getElementById("btnYes");
@@ -263,12 +260,19 @@
         document.getElementById("screen2").classList.remove("hidden");
     }, 7000);
 
-    function moveNo() {
+    // FIX: moveNo ahora detiene eventos para evitar clics accidentales en el "Sí"
+    function moveNo(e) {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
         const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 20);
         const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 20);
         btnNo.style.position = "fixed";
         btnNo.style.left = x + "px";
         btnNo.style.top = y + "px";
+        
         yesSize += 12;
         btnYes.style.fontSize = yesSize + "px";
         btnYes.style.padding = (yesSize/1.5) + "px " + (yesSize * 1.2) + "px";
