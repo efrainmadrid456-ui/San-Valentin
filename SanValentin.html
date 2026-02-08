@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para ti ❤️</title>
+
+    <style>
+        :root {
+            --pink-dark: #ff4f87;
+            --pink-light: #ff8fb1;
+            --glass: rgba(255, 255, 255, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background: linear-gradient(180deg, var(--pink-light), #ff6f9f);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 20px;
+            max-width: 350px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.4);
+            animation: fadeIn 0.8s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .photo-container {
+            width: 100%;
+            height: 250px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .photo {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        p { color: white; font-size: 16px; line-height: 1.4; margin: 10px 0; }
+        h2 { color: white; font-size: 22px; margin: 15px 0; }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            min-height: 120px;
+            position: relative;
+        }
+
+        button {
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .yes { background: white; color: var(--pink-dark); z-index: 100; }
+        .no { background: var(--pink-dark); color: white; z-index: 50; }
+
+        .hidden { display: none; }
+
+        /* --- REPRODUCTOR --- */
+        .player-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .album-art {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .player-info {
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .play-pause {
+            background: white;
+            color: var(--pink-dark);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+        }
+
+        /* --- EMOJIS FLOTANTES --- */
+        .emoji-particle {
+            position: fixed;
+            bottom: -100px;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            animation: moveUp 12s linear forwards;
+            opacity: 0;
+        }
+
+        @keyframes moveUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<audio id="music" loop></audio>
+
+<div class="card" id="screen0">
+    <div class="photo-container"><img src="images/foto1.jpg" class="photo"></div>
+    <p>Cada momento contigo es único</p>
+</div>
+
+<div class="card hidden" id="screen1">
+    <div class="photo-container"><img src="images/foto2.jpg" class="photo"></div>
+    <p>Tu y yo changuita... 🐒💕</p>
+</div>
+
+<div class="card hidden" id="screen2">
+    <p><strong>Amor,</strong></p>
+    <p>Hay mil formas de pedirte que seas mi San Valentín, pero esta vez quería hacerlo desde mi lado un poquito hacker y muy cursi 🧸❤️</p>
+    <h2>¿Quieres ser mi San Valentín? 🌷</h2>
+    <div class="buttons">
+        <button class="no" id="btnNo" onmouseover="moveNo()" onclick="moveNo()">No 😢</button>
+        <button class="yes" id="btnYes" onclick="handleYes()">Sí 💕</button>
+    </div>
+</div>
+
+<div class="card hidden" id="screen3">
+    <p>Gracias por decir que sí, amorcito.</p>
+    <p>Prometo que este 14 sea un día que siempre recordemos.</p>
+    <p>Tenemos una date tú y yo…</p>
+    <div class="photo-container"><img src="images/foto-final.jpg" class="photo"></div>
+    <p><strong>Te amo ❤️</strong></p>
+
+    <div class="player-container">
+        <div class="player-header">
+            <img src="" id="albumArt" class="album-art">
+            <div class="player-info" id="trackTitle">Cargando...</div>
+        </div>
+        
+        <div class="player-controls">
+            <button class="control-btn" onclick="prevTrack()">⏮️</button>
+            <button class="control-btn play-pause" id="playBtn" onclick="togglePlay()">⏸️</button>
+            <button class="control-btn" onclick="nextTrack()">⏭️</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Configuración de Canciones
+    const playlist = [
+        { title: "Love Story (Taylor's Version)", file: "music.mp3", cover: "images/fotorep.jpg" },
+        { title: "Te Quiero Tanto, Tanto (En Vivo)", file: "music2.mp3", cover: "images/fotorep2.jpg" }
+    ];
+    let currentTrackIndex = 0;
+
+    // 2. Emojis iniciales
+    function createEmoji() {
+        const emojis = ['❤️', '🌹', '🐒', '💖'];
+        const particle = document.createElement('div');
+        particle.classList.add('emoji-particle');
+        particle.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+        particle.style.left = Math.random() * 100 + "vw";
+        particle.style.fontSize = (Math.random() * 10 + 20) + "px";
+        document.body.appendChild(particle);
+        setTimeout(() => { particle.remove(); }, 12000);
+    }
+
+    setInterval(createEmoji, 600);
+    for(let i=0; i<5; i++) createEmoji();
+
+    // 3. Lógica de Navegación
+    let yesSize = 16;
+    const btnNo = document.getElementById("btnNo");
+    const btnYes = document.getElementById("btnYes");
+    const music = document.getElementById("music");
+    const playBtn = document.getElementById("playBtn");
+    const albumArt = document.getElementById("albumArt");
+    const trackTitle = document.getElementById("trackTitle");
+
+    setTimeout(() => {
+        document.getElementById("screen0").classList.add("hidden");
+        document.getElementById("screen1").classList.remove("hidden");
+    }, 3500);
+
+    setTimeout(() => {
+        document.getElementById("screen1").classList.add("hidden");
+        document.getElementById("screen2").classList.remove("hidden");
+    }, 7000);
+
+    function moveNo() {
+        const x = Math.random() * (window.innerWidth - btnNo.offsetWidth - 20);
+        const y = Math.random() * (window.innerHeight - btnNo.offsetHeight - 20);
+        btnNo.style.position = "fixed";
+        btnNo.style.left = x + "px";
+        btnNo.style.top = y + "px";
+        yesSize += 12;
+        btnYes.style.fontSize = yesSize + "px";
+        btnYes.style.padding = (yesSize/1.5) + "px " + (yesSize * 1.2) + "px";
+    }
+
+    function loadTrack(index) {
+        const track = playlist[index];
+        music.src = track.file;
+        albumArt.src = track.cover;
+        trackTitle.innerText = track.title;
+    }
+
+    function handleYes() {
+        document.getElementById("screen2").classList.add("hidden");
+        document.getElementById("screen3").classList.remove("hidden");
+        btnNo.style.display = "none";
+        setInterval(createEmoji, 300);
+        
+        loadTrack(currentTrackIndex);
+        music.volume = 0.6;
+        music.play();
+    }
+
+    function togglePlay() {
+        if (music.paused) {
+            music.play();
+            playBtn.innerHTML = "⏸️";
+        } else {
+            music.pause();
+            playBtn.innerHTML = "▶️";
+        }
+    }
+
+    function nextTrack() {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        loadTrack(currentTrackIndex);
+        music.play();
+        playBtn.innerHTML = "⏸️";
+    }
+
+    function prevTrack() {
+        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+        loadTrack(currentTrackIndex);
+        music.play();
+        playBtn.innerHTML = "⏸️";
+    }
+</script>
+
+</body>
+</html>
